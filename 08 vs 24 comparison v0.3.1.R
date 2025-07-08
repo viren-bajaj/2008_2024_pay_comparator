@@ -116,7 +116,7 @@ ui <- bslib::page_fluid(
     sidebarPanel(
       width = 4,
 # Info
-tags$label("This pay comparatator will look at gross pay (and less income tax) for England only (Wales may be added in a future version). It will not consider student loans. Pension contributions may be added in a future version. It will also give you the option for comparing 2008 pay adjusted for CPI or RPI. It also assumes you are under 65 as personal allwoance was different for over 65s in 2008"),
+tags$label("This pay comparatator will look at pay for England only."),
 
 	
 #England pay options	
@@ -238,11 +238,11 @@ tags$label("This pay comparatator will look at gross pay (and less income tax) f
 		),
 			conditionalPanel(
 				condition = "input.gp_band == false",
-				checkboxInput("know_band", "Do you know your pay band? If not we'll assume no banding", value = TRUE),
+				checkboxInput("know_band", "Do you know what your pay band would have been in 2008? If not we'll assume no banding.", value = TRUE),
 					conditionalPanel(
 						condition = "input.know_band == true",
 					       radioButtons(
-								"pay_band", "What's your band?",
+								"pay_band", "What's your 2008 band? - most jobs will attract banding. Example: A full time ST2+ radiology registrar doing 48 hours or fewer would usually be 1B or 1A",
 								choices = c("no band", "1C", "1B", "1A", "2B", "2A", "3","FC","FB","FA","GP"),
 								selected = "no band",
 								inline = TRUE
@@ -821,6 +821,9 @@ income_tax_2008 <- function(gross) {
 	net_08_infl <- net_08 * infl
 	gross_pay_08_infl <- gross_pay_08 * infl
 	
+	gross_percent <- (gross_pay_08_infl/gross_pay -1)*100
+	net_percent <- (net_08_infl/net_24 -1)*100
+	base_percent <- (base_salary_08_infl/base_salary -1)*100
   
 # ========================
 # HTML outputs
@@ -900,9 +903,9 @@ income_tax_2008 <- function(gross) {
   
     # Inflation summary percent
   out <- c(out, "<hr><h4>Percentage difference in inflation adjusted figures</h4><ul>")
-  out <- c(out, sprintf("<li>Difference in Gross pay %.2f%%</li>", (gross_pay_08_infl/gross_pay -1)))
-  out <- c(out, sprintf("<li>Difference in Net pay %.2f%%</li>", (net_08_infl/net_24 -1)))
-  out <- c(out, sprintf("<li>Difference in Base pay %.2f%%</li>", (base_salary_08_infl/base_salary -1)))
+  out <- c(out, sprintf("<li>Difference in Gross pay %.2f%%</li>", (gross_percent)))
+  out <- c(out, sprintf("<li>Difference in Net pay %.2f%%</li>", (net_percent)))
+  out <- c(out, sprintf("<li>Difference in Base pay %.2f%%</li>", (base_percent)))
   out <- c(out, "</ul>")
 
 	#stroing values for the barplots
@@ -990,7 +993,7 @@ income_tax_2008 <- function(gross) {
 		#req(input$calculate)  # This should make it render only after pressing Calculate
 		tags$p(
 			style = "font-size: 0.9em; color: #6c757d; margin-top: 20px;",
-			"This is a work in progress. If you have found an error, please let me know at ",
+			"This pay comparatator will look at gross pay (and less income tax) for England only (Wales may be added in a future version). It will not consider student loans. Pension contributions may be added in a future version. It will also give you the option for comparing 2008 pay adjusted for CPI or RPI. It also assumes you are under 65 as personal allwoance was different for over 65s in 2008. Please note that GP banding was different in 2008 as was FY1 banding. This is a work in progress. If you have found an error, please let me know at ",
 			tags$a(href = "https://github.com/viren-bajaj/DDRB-uplift-calc-2025-2026/issues", target = "_blank", "my GitHub page.")
 		)
 	})
