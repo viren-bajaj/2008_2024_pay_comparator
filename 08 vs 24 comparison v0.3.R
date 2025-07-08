@@ -223,7 +223,7 @@ tags$label("This pay comparatator will look at gross pay (and less income tax) f
 		conditionalPanel(
 			condition = "input.is_ltft == true",
 			radioButtons(
-				"LTFT_old", "What would your LTFT scale have been in 2008 (F9 is ~905, F8 is ~805 etc.)?",
+				"LTFT_old", "What would your LTFT scale have been in 2008 (F9 is ~90%, F8 is ~80% etc.)?",
 				choices = c("F9", "F8", "F7", "F6", "F5", "not LTFT"),
 				selected = "F8",
 				inline = TRUE
